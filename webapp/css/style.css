@@ -1,0 +1,34 @@
+/* Preserve SAP Fiori theme styling. */
+
+.hrKpiNumber {
+    display: block;
+    padding: 0.5rem 0;
+}
+
+.hrKpiNumber .sapMObjectNumberText {
+    font-size: 2rem;
+    line-height: 2.5rem;
+}
+
+[id$="idFiltersGrid"] .sapMVBox {
+    min-width: 0;
+}
+
+[id$="idFiltersGrid"] .sapMLabel {
+    margin-bottom: 0.25rem;
+}
+
+[id$="idEmployeesPanel"] > .sapMPanelContent {
+    padding: 0;
+}
+
+[id$="idChartContainerVBox"] {
+    min-width: 0;
+}
+
+@media (max-width: 600px) {
+    .hrKpiNumber .sapMObjectNumberText {
+        font-size: 1.75rem;
+        line-height: 2.25rem;
+    }
+}

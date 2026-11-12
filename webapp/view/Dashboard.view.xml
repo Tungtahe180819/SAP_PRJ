@@ -1,0 +1,289 @@
+<mvc:View
+    controllerName="com.example.hranalytics.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:l="sap.ui.layout"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <f:DynamicPage
+        id="idDashboardDynamicPage"
+        fitContent="true"
+        class="sapUiContentPadding"
+        busy="{dashboard>/busy}"
+        busyIndicatorDelay="0">
+
+        <f:title>
+            <f:DynamicPageTitle id="idDashboardDynamicPageTitle">
+                <f:heading>
+                    <Title
+                        id="idEmployeeAnalyticsTitle"
+                        text="Employee Analytics"
+                        level="H1"/>
+                </f:heading>
+
+                <f:expandedContent>
+                    <Text
+                        id="idHumanResourcesOverviewText"
+                        text="Human Resources Overview"/>
+                </f:expandedContent>
+
+                <f:snappedContent>
+                    <ObjectStatus
+                        id="idSummaryObjectStatus"
+                        text="{dashboard>/summary}"
+                        state="Information"/>
+                </f:snappedContent>
+
+                <f:actions>
+                    <Button
+                        id="idRefreshButton"
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        type="Transparent"
+                        press=".onRefreshButtonPress"/>
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header>
+            <f:DynamicPageHeader id="idFiltersDynamicPageHeader">
+                <f:content>
+                    <l:Grid
+                        id="idFiltersGrid"
+                        defaultSpan="XL3 L3 M6 S12">
+
+                        <VBox id="idDepartmentFilterVBox">
+                            <Label
+                                id="idDepartmentLabel"
+                                text="Department"
+                                labelFor="idDepartmentsSelect"/>
+                            <Select
+                                id="idDepartmentsSelect"
+                                width="100%"
+                                selectedKey="{dashboard>/draft/department}"
+                                items="{dashboard>/departments}">
+                                <core:Item
+                                    id="idDeptNameItem"
+                                    key="{dashboard>DeptId}"
+                                    text="{dashboard>DeptName}"/>
+                            </Select>
+                        </VBox>
+
+                        <VBox id="idJobFilterVBox">
+                            <Label
+                                id="idJobTitleLabel"
+                                text="Job Title"
+                                labelFor="idJobTitlesSelect"/>
+                            <Select
+                                id="idJobTitlesSelect"
+                                width="100%"
+                                selectedKey="{dashboard>/draft/jobTitle}"
+                                items="{dashboard>/jobTitles}">
+                                <core:Item
+                                    id="idJobTitleItem"
+                                    key="{dashboard>Key}"
+                                    text="{dashboard>JobTitle}"/>
+                            </Select>
+                        </VBox>
+
+                        <VBox id="idGenderFilterVBox">
+                            <Label
+                                id="idGenderLabel"
+                                text="Gender"
+                                labelFor="idGendersSelect"/>
+                            <Select
+                                id="idGendersSelect"
+                                width="100%"
+                                selectedKey="{dashboard>/draft/gender}"
+                                items="{dashboard>/genders}">
+                                <core:Item
+                                    id="idGenderNameItem"
+                                    key="{dashboard>Key}"
+                                    text="{dashboard>GenderName}"/>
+                            </Select>
+                        </VBox>
+
+                        <VBox id="idFilterActionsVBox">
+                            <Label
+                                id="idApplyFiltersLabel"
+                                text="Apply Filters"/>
+                            <HBox id="idFilterActionsHBox">
+                                <Button
+                                    id="idGoButton"
+                                    text="Go"
+                                    type="Emphasized"
+                                    press=".onGoButtonPress"/>
+                                <Button
+                                    id="idClearButton"
+                                    text="Clear"
+                                    type="Transparent"
+                                    press=".onClearButtonPress"
+                                    class="sapUiTinyMarginBegin"/>
+                            </HBox>
+                        </VBox>
+                    </l:Grid>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <f:content>
+            <VBox id="idDashboardContentVBox">
+
+                <l:Grid
+                    id="idKpiGrid"
+                    defaultSpan="XL4 L4 M4 S12"
+                    class="sapUiSmallMarginBottom">
+
+                    <Panel
+                        id="idEmployeesKpiPanel"
+                        headerText="Total Employees">
+                        <ObjectNumber
+                            id="idTotalEmployeesObjectNumber"
+                            number="{dashboard>/totalEmployees}"
+                            class="hrKpiNumber"/>
+                    </Panel>
+
+                    <Panel
+                        id="idDepartmentsKpiPanel"
+                        headerText="Departments">
+                        <ObjectNumber
+                            id="idTotalDepartmentsObjectNumber"
+                            number="{dashboard>/totalDepartments}"
+                            class="hrKpiNumber"/>
+                    </Panel>
+
+                    <Panel
+                        id="idAverageAgeKpiPanel"
+                        headerText="Average Age">
+                        <ObjectNumber
+                            id="idAverageAgeObjectNumber"
+                            number="{dashboard>/averageAge}"
+                            unit="years"
+                            class="hrKpiNumber"/>
+                    </Panel>
+                </l:Grid>
+
+                <l:Grid
+                    id="idMainGrid"
+                    defaultSpan="XL12 L12 M12 S12">
+
+                    <Panel
+                        id="idAnalysisPanel"
+                        class="sapUiSmallMarginBottom">
+
+                        <headerToolbar>
+                            <OverflowToolbar id="idAnalysisOverflowToolbar">
+                                <Title
+                                    id="idWorkforceAnalysisTitle"
+                                    text="Workforce Analysis"
+                                    level="H2"/>
+                                <ToolbarSpacer id="idAnalysisToolbarSpacer"/>
+                                <Label
+                                    id="idAnalyzeByLabel"
+                                    text="Analyze by"
+                                    labelFor="idChartOptionsSelect"/>
+                                <Select
+                                    id="idChartOptionsSelect"
+                                    selectedKey="{dashboard>/chartKey}"
+                                    items="{dashboard>/chartOptions}"
+                                    change=".onChartOptionsSelectChange">
+                                    <core:Item
+                                        id="idChartNameItem"
+                                        key="{dashboard>Key}"
+                                        text="{dashboard>ChartName}"/>
+                                </Select>
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <content>
+                            <VBox id="idChartContainerVBox" width="100%"/>
+                        </content>
+                    </Panel>
+
+                    <Panel id="idEmployeesPanel">
+                        <headerToolbar>
+                            <OverflowToolbar id="idEmployeesOverflowToolbar">
+                                <Title
+                                    id="idEmployeesDashboardfilteredCountTitle"
+                                    text="Employees ({dashboard>/filteredCount})"
+                                    level="H2"/>
+                                <ToolbarSpacer id="idEmployeesToolbarSpacer"/>
+                                <SearchField
+                                    id="idSearchQuerySearchField"
+                                    width="18rem"
+                                    value="{dashboard>/searchQuery}"
+                                    placeholder="Search employees"
+                                    liveChange=".onSearchQuerySearchFieldLiveChange"/>
+                                <Button
+                                    id="idSortButton"
+                                    text="Sort"
+                                    icon="sap-icon://sort"
+                                    type="Transparent"
+                                    press=".onSortButtonPress"/>
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <content>
+                            <Table
+                                id="idFilteredEmployeesTable"
+                                items="{dashboard>/filteredEmployees}"
+                                growing="true"
+                                noDataText="No employees match the current filters">
+
+                                <columns>
+                                    <Column id="idEmployeeIdColumn" width="8rem">
+                                        <Text id="idEmployeeIDText" text="Employee ID"/>
+                                    </Column>
+
+                                    <Column id="idEmployeeNameColumn">
+                                        <Text id="idFullNameText" text="Full Name"/>
+                                    </Column>
+
+                                    <Column
+                                        id="idDepartmentColumn"
+                                        minScreenWidth="Tablet"
+                                        demandPopin="true">
+                                        <Text id="idDepartmentHeaderText" text="Department"/>
+                                    </Column>
+
+                                    <Column
+                                        id="idGenderColumn"
+                                        width="7rem"
+                                        minScreenWidth="Tablet"
+                                        demandPopin="true">
+                                        <Text id="idGenderHeaderText" text="Gender"/>
+                                    </Column>
+
+                                    <Column
+                                        id="idJobTitleColumn"
+                                        minScreenWidth="Desktop"
+                                        demandPopin="true">
+                                        <Text id="idJobTitleHeaderText" text="Job Title"/>
+                                    </Column>
+                                </columns>
+
+                                <items>
+                                    <ColumnListItem
+                                        id="idEmployeeColumnListItem"
+                                        type="Navigation"
+                                        press=".onColumnListItemPress">
+                                        <cells>
+                                            <Text id="idEmpIdText" text="{dashboard>EmpId}"/>
+                                            <Text id="idEmpNameText" text="{dashboard>EmpName}"/>
+                                            <Text id="idDeptNameText" text="{dashboard>DeptName}"/>
+                                            <Text id="idGenderTextText" text="{dashboard>GenderText}"/>
+                                            <Text id="idJobTitleText" text="{dashboard>JobTitle}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </content>
+                    </Panel>
+
+                </l:Grid>
+            </VBox>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
